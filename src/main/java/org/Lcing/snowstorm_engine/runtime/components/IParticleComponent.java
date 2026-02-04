@@ -7,41 +7,41 @@ import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 public interface IParticleComponent {
     /**
-     * Called when the component is being initialized from JSON.
+     * 当组件从 JSON 初始化时调用。
      * 
-     * @param json The JSON element for this component.
+     * @param json 此组件的 JSON 元素。
      */
     void fromJson(JsonElement json);
 
     /**
-     * Called every tick on the Emitter.
-     * Use this for global logic like spawning control.
+     * 在发射器每 tick 调用。
+     * 用于全局逻辑，如生成控制。
      */
     default void update(SnowstormEmitter emitter, float dt) {
     }
 
     /**
-     * Called when the emitter resets for a new loop cycle.
+     * 当发射器重置进行新的循环周期时调用。
      */
     default void onEmitterLoopReset(SnowstormEmitter emitter) {
     }
 
     /**
-     * Called when a new particle is spawned.
-     * Use this to initialize particle state (position, velocity, etc).
+     * 当新粒子生成时调用。
+     * 用于初始化粒子状态（位置、速度等）。
      */
     default void onInitializeParticle(SnowstormParticle particle) {
     }
 
     /**
-     * Called every tick on every active particle.
-     * Use this for particle physics and updates.
+     * 在每个活动粒子的每 tick 调用。
+     * 用于粒子物理和更新。
      */
     default void updateParticle(SnowstormParticle particle, float dt) {
     }
 
     /**
-     * Called before rendering to set up render state (e.g. UVs, Coloring).
+     * 在渲染之前调用，以设置渲染状态（例如 UV、着色）。
      */
     default void onRenderParticle(SnowstormParticle particle, float partialTick) {
     }

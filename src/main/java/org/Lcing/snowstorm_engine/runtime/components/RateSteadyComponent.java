@@ -11,7 +11,7 @@ public class RateSteadyComponent implements IParticleComponent {
     private IMolangExpression spawnRate = IMolangExpression.ZERO;
     private IMolangExpression maxParticles = IMolangExpression.constant(50);
 
-    // Accumulator for fractional spawning
+    // 用于小数生成的累加器
     private float spawnAccumulator = 0;
 
     @Override
@@ -36,7 +36,7 @@ public class RateSteadyComponent implements IParticleComponent {
         float rate = spawnRate.eval(emitter.getContext());
         float max = maxParticles.eval(emitter.getContext());
 
-        // Spawn Logic
+        // 生成逻辑
         if (rate > 0 && emitter.getParticleCount() < max) {
             float particlesToSpawn = rate * dt + spawnAccumulator;
             int count = (int) particlesToSpawn;

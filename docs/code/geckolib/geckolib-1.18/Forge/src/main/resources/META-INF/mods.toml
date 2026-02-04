@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+issueTrackerURL="https://github.com/bernie-g/geckolib/issues"
+license="MIT"
+[[mods]]
+modId="geckolib3"
+version="${file.jarVersion}" 
+displayName="GeckoLib"
+logoFile="geckolib.png" 
+credits="Gecko, Eliot, AzureDoom, DerToaster" 
+authors="Gecko, Eliot, AzureDoom, Chappie, DerToaster"
+description='''
+GeckoLib is an animation engine for Minecraft Mods, with support for complex 3D keyframe-based animations, 30+ easings, concurrent animation support, sound and particle keyframes, event keyframes, and more.
+'''
+[[dependencies.geckolib3]]
+    modId="forge"
+    mandatory=true 
+    versionRange="[40.0,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.geckolib3]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18, 1.19)"
+    ordering="NONE"
+    side="BOTH"

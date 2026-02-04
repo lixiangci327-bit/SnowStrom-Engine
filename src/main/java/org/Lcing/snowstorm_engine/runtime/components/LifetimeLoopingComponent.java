@@ -32,7 +32,7 @@ public class LifetimeLoopingComponent implements IParticleComponent {
         float total = active + sleep;
 
         if (total <= 0)
-            return; // Prevent division by zero or infinite loops if misconfigured
+            return; // 如果配置错误，防止除以零或无限循环
 
         float age = emitter.getAge();
 

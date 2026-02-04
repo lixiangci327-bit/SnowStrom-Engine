@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import org.Lcing.snowstorm_engine.runtime.SnowstormEmitter;
 
 /**
- * Implements minecraft:emitter_local_space
- * When enabled, particles simulate in emitter's local space.
+ * 实现 minecraft:emitter_local_space
+ * 启用时，粒子在发射器的局部空间中模拟。
  */
 public class LocalSpaceComponent implements IParticleComponent {
 
@@ -19,7 +19,7 @@ public class LocalSpaceComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value
+        // json 已经是组件值了
         JsonObject comp = json.getAsJsonObject();
 
         if (comp.has("position")) {
@@ -35,7 +35,7 @@ public class LocalSpaceComponent implements IParticleComponent {
 
     @Override
     public void update(SnowstormEmitter emitter, float dt) {
-        // Store local space flags on emitter for use by other systems
+        // 在发射器上存储局部空间标志以供其他系统使用
         emitter.localSpacePosition = localPosition;
         emitter.localSpaceRotation = localRotation;
         emitter.localSpaceVelocity = localVelocity;

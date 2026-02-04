@@ -8,13 +8,13 @@ import org.Lcing.snowstorm_engine.molang.MolangParser;
 import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 /**
- * Implements minecraft:particle_motion_collision
- * Enables collision detection with blocks.
+ * 实现 minecraft:particle_motion_collision
+ * 启用与方块的碰撞检测。
  */
 public class MotionCollisionComponent implements IParticleComponent {
 
     private IMolangExpression collisionRadius;
-    private IMolangExpression coefficientOfRestitution; // Bounce factor
+    private IMolangExpression coefficientOfRestitution; // 弹跳系数
     private IMolangExpression collisionDrag;
     private boolean expireOnContact = false;
 
@@ -23,28 +23,28 @@ public class MotionCollisionComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value
+        // json 已经是组件值了
         JsonObject comp = json.getAsJsonObject();
 
-        // Parse collision_radius
+        // 解析 collision_radius
         collisionRadius = MolangParser.parseJson(comp.get("collision_radius"));
         if (collisionRadius == null) {
             collisionRadius = IMolangExpression.constant(0.1f);
         }
 
-        // Parse coefficient_of_restitution (bounciness)
+        // 解析 coefficient_of_restitution (弹性)
         coefficientOfRestitution = MolangParser.parseJson(comp.get("coefficient_of_restitution"));
         if (coefficientOfRestitution == null) {
             coefficientOfRestitution = IMolangExpression.constant(0);
         }
 
-        // Parse collision_drag
+        // 解析 collision_drag
         collisionDrag = MolangParser.parseJson(comp.get("collision_drag"));
         if (collisionDrag == null) {
             collisionDrag = IMolangExpression.ZERO;
         }
 
-        // Parse expire_on_contact
+        // 解析 expire_on_contact
         if (comp.has("expire_on_contact")) {
             expireOnContact = comp.get("expire_on_contact").getAsBoolean();
         }
@@ -58,32 +58,32 @@ public class MotionCollisionComponent implements IParticleComponent {
         var ctx = particle.getContext();
         float radius = collisionRadius.eval(ctx);
 
-        // Simple ground collision (Y = 0)
-        // In a real implementation, this would check against actual blocks
+        // 简单的地面碰撞 (Y = 0)
+        // 在真实实现中，这将根据实际方块进行检查
         double predictedY = particle.y + particle.vy * dt;
 
         if (predictedY - radius < 0) {
-            // Collision with ground
+            // 与地面碰撞
             if (expireOnContact) {
                 particle.isDead = true;
                 return;
             }
 
-            // Bounce
+            // 反弹
             float bounce = coefficientOfRestitution.eval(ctx);
             particle.vy = -particle.vy * bounce;
             particle.y = radius;
 
-            // Apply friction/drag
+            // 应用摩擦/阻力
             float drag = collisionDrag.eval(ctx);
             particle.vx *= (1 - drag);
             particle.vz *= (1 - drag);
 
-            // Set collision flag for Molang
+            // 设置 Molang 的碰撞标志
             ctx.setVariable("variable.has_collision", 1);
         }
 
-        // TODO: Implement full block collision using Level.getBlockState
+        // TODO: 使用 Level.getBlockState 实现完整的方块碰撞
     }
 
     @Override

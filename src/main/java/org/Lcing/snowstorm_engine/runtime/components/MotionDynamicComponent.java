@@ -16,7 +16,7 @@ public class MotionDynamicComponent implements IParticleComponent {
     @Override
     public void fromJson(JsonElement json) {
         if (!json.isJsonObject())
-            return; // Usually empty object {} for default physics
+            return; // 通常为空对象 {} 用于默认物理
         JsonObject obj = json.getAsJsonObject();
 
         if (obj.has("linear_acceleration")) {
@@ -33,42 +33,43 @@ public class MotionDynamicComponent implements IParticleComponent {
 
     @Override
     public void updateParticle(SnowstormParticle particle, float dt) {
-        // Physics update
+        // 物理更新
         // pos += velocity * dt
         particle.x += particle.vx * dt;
         particle.y += particle.vy * dt;
         particle.z += particle.vz * dt;
 
-        // Acceleration
+        // 加速度
         // v += a * dt
         float ax = linearAcceleration[0].eval(particle.getContext());
         float ay = linearAcceleration[1].eval(particle.getContext());
         float az = linearAcceleration[2].eval(particle.getContext());
 
-        // Debug: Log acceleration occasionally
+        // 调试: 偶尔记录加速度
         if (Math.random() < 0.002) {
-            System.out.println("[Snowstorm] Accel: (" +
-                    String.format("%.2f", ax) + ", " +
-                    String.format("%.2f", ay) + ", " +
-                    String.format("%.2f", az) + ")");
+            // System.out.println("[Snowstorm] Accel: (" +
+            // String.format("%.2f", ax) + ", " +
+            // String.format("%.2f", ay) + ", " +
+            // String.format("%.2f", az) + ")");
         }
 
         particle.vx += ax * dt;
         particle.vy += ay * dt;
         particle.vz += az * dt;
 
-        // Drag
-        // v *= (1 - drag * dt) ? Or more complex?
-        // Basic implementation:
+        // 阻力
+        // v *= (1 - drag * dt) ? 或者是更复杂的公式？
+        // 基础实现：
         float drag = linearDrag.eval(particle.getContext());
         if (drag > 0) {
-            float dragFactor = Math.max(0, 1.0f - drag * dt);
+            // 限制 dragFactor 以防止反向加速或不稳定的速度增长
+            float dragFactor = Math.max(0, Math.min(1, 1.0f - drag * dt));
             particle.vx *= dragFactor;
             particle.vy *= dragFactor;
             particle.vz *= dragFactor;
         }
 
-        // Update Molang variables after move
+        // 移动后更新 Molang 变量
         particle.getContext().setVariable("variable.particle_x", (float) particle.x);
         particle.getContext().setVariable("variable.particle_y", (float) particle.y);
         particle.getContext().setVariable("variable.particle_z", (float) particle.z);

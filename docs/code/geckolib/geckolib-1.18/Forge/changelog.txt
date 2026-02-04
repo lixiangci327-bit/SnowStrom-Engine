@@ -1,0 +1,35 @@
+v3.0.57
+
+- Closes #345
+
+v3.0.56
+
+- Updates Geckolib default armor with new Gecko armor made by VoutVouniern
+- Fixes issues Glow Layer issue.
+
+v3.0.55
+
+- MClib updated, Fixed -() group not working - Hiroku https://github.com/fadookie/particleman/pull/7
+- Fixes crash with Layer Example animation location call.
+
+v3.0.54
+
+- Fixes crashes due to getUniqueID
+
+v3.0.53
+
+- Deprecate getPackedOverlay for getOverlay, move to non-static to allow Overriding.
+- Move example resources to constants
+
+v3.0.52
+
+- Fixes broken rotation on cubes
+
+v3.0.51
+
+- Updates Core with Java 17 changes from pervious PR.
+- Fixes Vanilla Armor Crash with Extended Render.
+- Fixes keyframe issue, fixing animations not playing.
+- Fixes broken movement check for entities. 
+- Fixes broken rotations on child bones.
+- Updates Example block entities to EDefaultLoopTypes

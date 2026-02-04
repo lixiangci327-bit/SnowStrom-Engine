@@ -8,8 +8,8 @@ import org.Lcing.snowstorm_engine.runtime.SnowstormEmitter;
 import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 /**
- * Implements minecraft:emitter_rate_instant
- * All particles are emitted at once when the emitter starts/loops.
+ * 实现 minecraft:emitter_rate_instant
+ * 当发射器启动/循环时，所有粒子一次性发射。
  */
 public class RateInstantComponent implements IParticleComponent {
 
@@ -21,7 +21,7 @@ public class RateInstantComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value
+        // json 已经是组件值了
         JsonObject comp = json.getAsJsonObject();
 
         if (comp.has("num_particles")) {
@@ -37,7 +37,7 @@ public class RateInstantComponent implements IParticleComponent {
         if (!emitter.isSpawning)
             return;
 
-        // Only spawn once per loop
+        // 每次循环只生成一次
         if (!spawned) {
             int count = (int) numParticles.eval(emitter.getContext());
             for (int i = 0; i < count; i++) {
@@ -49,7 +49,7 @@ public class RateInstantComponent implements IParticleComponent {
 
     @Override
     public void onEmitterLoopReset(SnowstormEmitter emitter) {
-        // Reset for next loop
+        // 为下一次循环重置
         spawned = false;
     }
 }

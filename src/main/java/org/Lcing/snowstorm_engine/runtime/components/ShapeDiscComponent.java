@@ -7,14 +7,14 @@ import org.Lcing.snowstorm_engine.molang.MolangParser;
 import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 /**
- * Implements minecraft:emitter_shape_disc
- * Particles spawn on a disc (flat circle).
+ * 实现 minecraft:emitter_shape_disc
+ * 粒子在圆盘（平面圆）上生成。
  */
 public class ShapeDiscComponent implements IParticleComponent {
 
     private IMolangExpression offsetX, offsetY, offsetZ;
     private IMolangExpression radius;
-    private IMolangExpression normalX, normalY, normalZ; // Disc normal
+    private IMolangExpression normalX, normalY, normalZ; // 圆盘法线
     private boolean surfaceOnly = false;
     private String directionMode = "outwards";
     private IMolangExpression dirX, dirY, dirZ;
@@ -24,10 +24,10 @@ public class ShapeDiscComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value
+        // json 已经是组件值了
         JsonObject comp = json.getAsJsonObject();
 
-        // Parse offset [x, y, z]
+        // 解析 offset [x, y, z]
         if (comp.has("offset") && comp.get("offset").isJsonArray()) {
             var arr = comp.getAsJsonArray("offset");
             offsetX = MolangParser.parseJson(arr.get(0));
@@ -37,13 +37,13 @@ public class ShapeDiscComponent implements IParticleComponent {
             offsetX = offsetY = offsetZ = IMolangExpression.ZERO;
         }
 
-        // Parse radius
+        // 解析 radius
         radius = MolangParser.parseJson(comp.get("radius"));
         if (radius == null) {
             radius = IMolangExpression.constant(1);
         }
 
-        // Parse plane_normal (defaults to Y-up)
+        // 解析 plane_normal (默认 Y 轴向上)
         if (comp.has("plane_normal") && comp.get("plane_normal").isJsonArray()) {
             var arr = comp.getAsJsonArray("plane_normal");
             normalX = MolangParser.parseJson(arr.get(0));
@@ -55,12 +55,12 @@ public class ShapeDiscComponent implements IParticleComponent {
             normalZ = IMolangExpression.ZERO;
         }
 
-        // Parse surface_only
+        // 解析 surface_only
         if (comp.has("surface_only")) {
             surfaceOnly = comp.get("surface_only").getAsBoolean();
         }
 
-        // Parse direction
+        // 解析 direction
         if (comp.has("direction")) {
             JsonElement dirElem = comp.get("direction");
             if (dirElem.isJsonPrimitive()) {
@@ -82,37 +82,37 @@ public class ShapeDiscComponent implements IParticleComponent {
 
         float r = radius.eval(ctx);
 
-        // Random angle on disc
+        // 圆盘上的随机角度
         double angle = rand.nextDouble() * 2 * Math.PI;
 
-        // Distance from center
+        // 到中心的距离
         float dist;
         if (surfaceOnly) {
             dist = r;
         } else {
-            // sqrt for uniform distribution on disc
+            // 平方根用于圆盘上的均匀分布
             dist = r * (float) Math.sqrt(rand.nextDouble());
         }
 
-        // Get normal vector
+        // 获取法向量
         float nx = normalX.eval(ctx);
         float ny = normalY.eval(ctx);
         float nz = normalZ.eval(ctx);
 
-        // Normalize
+        // 归一化
         float nLen = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
         if (nLen > 0.001f) {
             nx /= nLen;
             ny /= nLen;
             nz /= nLen;
         } else {
-            ny = 1; // Default Y-up
+            ny = 1; // 默认 Y 轴向上
         }
 
-        // Create two vectors perpendicular to normal
+        // 创建两个垂直于法线的向量
         float ux, uy, uz, vx, vy, vz;
         if (Math.abs(ny) > 0.9f) {
-            // Normal is close to Y, use X as reference
+            // 法线接近 Y 轴，使用 X 轴作为参考
             ux = 1;
             uy = 0;
             uz = 0;
@@ -125,7 +125,7 @@ public class ShapeDiscComponent implements IParticleComponent {
         vx = ny * uz - nz * uy;
         vy = nz * ux - nx * uz;
         vz = nx * uy - ny * ux;
-        // Normalize v
+        // 归一化 v
         float vLen = (float) Math.sqrt(vx * vx + vy * vy + vz * vz);
         vx /= vLen;
         vy /= vLen;
@@ -135,7 +135,7 @@ public class ShapeDiscComponent implements IParticleComponent {
         uy = vz * nx - vx * nz;
         uz = vx * ny - vy * nx;
 
-        // Position on disc: offset + (cos(angle)*u + sin(angle)*v) * dist
+        // 圆盘上的位置: offset + (cos(angle)*u + sin(angle)*v) * dist
         float cosA = (float) Math.cos(angle);
         float sinA = (float) Math.sin(angle);
 
@@ -143,7 +143,7 @@ public class ShapeDiscComponent implements IParticleComponent {
         float py = (cosA * uy + sinA * vy) * dist;
         float pz = (cosA * uz + sinA * vz) * dist;
 
-        // Apply offset
+        // 应用偏移
         float ox = offsetX.eval(ctx);
         float oy = offsetY.eval(ctx);
         float oz = offsetZ.eval(ctx);
@@ -152,10 +152,10 @@ public class ShapeDiscComponent implements IParticleComponent {
         particle.y += oy + py;
         particle.z += oz + pz;
 
-        // Set direction
+        // 设置方向
         switch (directionMode) {
             case "outwards":
-                // Direction is along the disc (perpendicular to normal, outward from center)
+                // 方向沿着圆盘（垂直于法线，从中心向外）
                 float len = (float) Math.sqrt(px * px + py * py + pz * pz);
                 if (len > 0.001f) {
                     particle.vx = px / len;
@@ -177,7 +177,7 @@ public class ShapeDiscComponent implements IParticleComponent {
                 particle.vz = dirZ != null ? dirZ.eval(ctx) : 0;
                 break;
             default:
-                // Use normal direction
+                // 使用法线方向
                 particle.vx = nx;
                 particle.vy = ny;
                 particle.vz = nz;

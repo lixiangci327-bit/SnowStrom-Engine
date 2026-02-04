@@ -1,0 +1,49 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"snow1": {
+			"loop": true,
+			"animation_length": 1.5833,
+			"bones": {
+				"bone3": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.5": {
+							"vector": [0, 31, 0]
+						}
+					}
+				},
+				"bone4": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 21]
+						},
+						"0.1667": {
+							"vector": [-25, 0, 1]
+						},
+						"0.3333": {
+							"vector": [-1, 20, -25]
+						}
+					}
+				}
+			},
+			"particle_effects": {
+				"0.125": {
+					"effect": "test2",
+					"locator": "locator3"
+				},
+				"0.25": {
+					"effect": "test1re",
+					"locator": "locator"
+				},
+				"0.5": {
+					"effect": "test2re2",
+					"locator": "locator2"
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

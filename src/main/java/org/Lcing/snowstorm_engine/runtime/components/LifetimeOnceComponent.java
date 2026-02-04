@@ -7,8 +7,8 @@ import org.Lcing.snowstorm_engine.molang.MolangParser;
 import org.Lcing.snowstorm_engine.runtime.SnowstormEmitter;
 
 /**
- * Implements minecraft:emitter_lifetime_once
- * Emitter executes once and expires after active_time.
+ * 实现 minecraft:emitter_lifetime_once
+ * 发射器执行一次并在 active_time 后过期。
  */
 public class LifetimeOnceComponent implements IParticleComponent {
 
@@ -20,7 +20,7 @@ public class LifetimeOnceComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value
+        // json 已经是组件值了
         JsonObject comp = json.getAsJsonObject();
 
         if (comp.has("active_time")) {
@@ -34,22 +34,22 @@ public class LifetimeOnceComponent implements IParticleComponent {
     @Override
     public void update(SnowstormEmitter emitter, float dt) {
         if (!started) {
-            // Evaluate active_time once at start
+            // 启动时评估一次 active_time
             float lifetime = activeTime.eval(emitter.getContext());
             emitter.setMaxLifetime(lifetime);
             emitter.isSpawning = true;
             started = true;
         }
 
-        // Check if emitter has exceeded its lifetime
+        // 检查发射器是否已超过其寿命
         float age = emitter.getAge();
         float maxLife = emitter.getMaxLifetime();
 
         if (age >= maxLife) {
-            // Stop spawning new particles, but DON'T remove emitter yet
+            // 停止生成新粒子，但还不要移除发射器
             emitter.isSpawning = false;
 
-            // Only mark for removal when all particles have died
+            // 仅当所有粒子都死亡时才标记为移除
             if (emitter.getParticleCount() == 0) {
                 emitter.markForRemoval();
             }

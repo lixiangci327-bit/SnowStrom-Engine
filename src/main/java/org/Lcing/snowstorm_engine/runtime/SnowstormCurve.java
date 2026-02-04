@@ -7,7 +7,7 @@ import org.Lcing.snowstorm_engine.molang.IMolangExpression;
 import org.Lcing.snowstorm_engine.molang.MolangParser;
 
 public class SnowstormCurve {
-    private String type; // "linear" (others: "bezier", "catmull_rom" not implemented yet)
+    private String type; // "linear" (其它: "bezier", "catmull_rom" 尚未实现)
     private IMolangExpression input;
     private IMolangExpression horizontalRange;
     private float[] nodes;
@@ -49,13 +49,13 @@ public class SnowstormCurve {
         float in = input.eval(ctx);
         float range = horizontalRange.eval(ctx);
 
-        // Normalized input (0.0 to 1.0)
-        // Usually curves are mapped from input [0, range] to nodes index
+        // 归一化输入 (0.0 到 1.0)
+        // 通常曲线从输入 [0, range] 映射到节点索引
         float t = (range != 0) ? (in / range) : 0;
 
-        // Clamp t to [0, 1]? Assuming input/range is strictly growing/clamped?
-        // Usually particle_age / particle_lifetime is 0..1.
-        // Let's implement clamp just in case.
+        // 将 t 限制在 [0, 1]? 假设输入/范围是严格增长/限制的?
+        // 通常 particle_age / particle_lifetime 是 0..1.
+        // 让我们实现限制以防万一。
         if (t < 0)
             t = 0;
         if (t > 1)
@@ -66,8 +66,8 @@ public class SnowstormCurve {
         if (nodes.length == 1)
             return nodes[0];
 
-        // Linear interpolation
-        // nodes[0] is at t=0, nodes[len-1] is at t=1
+        // 线性插值
+        // nodes[0] 在 t=0, nodes[len-1] 在 t=1
         float scaledT = t * (nodes.length - 1);
         int index = (int) scaledT;
         float frac = scaledT - index;

@@ -12,15 +12,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Implements minecraft:particle_appearance_tinting
- * Sets color tinting for particles.
+ * 实现 minecraft:particle_appearance_tinting
+ * 设置粒子的颜色染色。
  */
 public class TintingComponent implements IParticleComponent {
 
     private IMolangExpression colorR, colorG, colorB, colorA;
     private boolean useGradient = false;
 
-    // Gradient support
+    // 渐变支持
     private IMolangExpression interpolant;
     private final List<Float> gradientKeys = new ArrayList<>();
     private final List<int[]> gradientColors = new ArrayList<>();
@@ -30,14 +30,14 @@ public class TintingComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // Note: json is the component VALUE, not wrapped with key
+        // 注意: json 是组件值，没有用键包装
         JsonObject comp = json.getAsJsonObject();
 
         JsonElement colorElem = comp.get("color");
         if (colorElem == null)
             return;
 
-        // Direct color: can be [r, g, b, a] or "#RRGGBB" / "#AARRGGBB"
+        // 直接颜色: 可以是 [r, g, b, a] 或 "#RRGGBB" / "#AARRGGBB"
         if (colorElem.isJsonArray()) {
             JsonArray arr = colorElem.getAsJsonArray();
             colorR = MolangParser.parseJson(arr.get(0));
@@ -49,7 +49,7 @@ public class TintingComponent implements IParticleComponent {
                 colorA = IMolangExpression.constant(1.0f);
             }
         } else if (colorElem.isJsonPrimitive() && colorElem.getAsString().startsWith("#")) {
-            // Parse hex color
+            // 解析十六进制颜色
             String hex = colorElem.getAsString();
             int[] rgba = parseHexColor(hex);
             colorR = IMolangExpression.constant(rgba[0] / 255.0f);
@@ -57,18 +57,18 @@ public class TintingComponent implements IParticleComponent {
             colorB = IMolangExpression.constant(rgba[2] / 255.0f);
             colorA = IMolangExpression.constant(rgba[3] / 255.0f);
         } else if (colorElem.isJsonObject()) {
-            // Gradient with interpolant
+            // 带有插值的渐变
             JsonObject colorObj = colorElem.getAsJsonObject();
             useGradient = true;
 
-            // Parse interpolant (Molang expression for gradient position)
+            // 解析插值 (用于渐变位置的 Molang 表达式)
             if (colorObj.has("interpolant")) {
                 interpolant = MolangParser.parseJson(colorObj.get("interpolant"));
             } else {
                 interpolant = IMolangExpression.constant(0);
             }
 
-            // Parse gradient colors
+            // 解析渐变颜色
             if (colorObj.has("gradient")) {
                 JsonObject gradient = colorObj.getAsJsonObject("gradient");
                 for (Map.Entry<String, JsonElement> entry : gradient.entrySet()) {
@@ -79,7 +79,7 @@ public class TintingComponent implements IParticleComponent {
                 }
             }
 
-            // Default to white if no gradient parsed
+            // 如果没有解析到渐变，默认为白色
             if (gradientKeys.isEmpty()) {
                 colorR = colorG = colorB = colorA = IMolangExpression.constant(1.0f);
                 useGradient = false;
@@ -89,7 +89,7 @@ public class TintingComponent implements IParticleComponent {
 
     private int[] parseHexColor(String hex) {
         int[] rgba = { 255, 255, 255, 255 };
-        hex = hex.substring(1); // Remove #
+        hex = hex.substring(1); // 移除 #
 
         if (hex.length() == 6) {
             // RRGGBB
@@ -112,7 +112,7 @@ public class TintingComponent implements IParticleComponent {
 
         float t = interpolant.eval(particle.getContext());
 
-        // Find surrounding keys for interpolation
+        // 查找插值的周围键
         int lowerIdx = 0;
         int upperIdx = gradientKeys.size() - 1;
 
@@ -142,13 +142,13 @@ public class TintingComponent implements IParticleComponent {
         particle.colorB = (lowerColor[2] + (upperColor[2] - lowerColor[2]) * blend) / 255.0f;
         particle.colorA = (lowerColor[3] + (upperColor[3] - lowerColor[3]) * blend) / 255.0f;
 
-        // Debug: Log color calculation occasionally
+        // 调试: 偶尔记录颜色计算
         if (Math.random() < 0.01) {
-            System.out.println("[Snowstorm] Color: t=" + String.format("%.2f", t) +
-                    " -> RGBA(" + String.format("%.2f", particle.colorR) +
-                    ", " + String.format("%.2f", particle.colorG) +
-                    ", " + String.format("%.2f", particle.colorB) +
-                    ", " + String.format("%.2f", particle.colorA) + ")");
+            // System.out.println("[Snowstorm] Color: t=" + String.format("%.2f", t) +
+            // " -> RGBA(" + String.format("%.2f", particle.colorR) +
+            // ", " + String.format("%.2f", particle.colorG) +
+            // ", " + String.format("%.2f", particle.colorB) +
+            // ", " + String.format("%.2f", particle.colorA) + ")");
         }
     }
 
@@ -167,7 +167,7 @@ public class TintingComponent implements IParticleComponent {
 
     @Override
     public void onRenderParticle(SnowstormParticle particle, float partialTick) {
-        // For gradient, update every frame based on interpolant
+        // 对于渐变，每帧根据插值更新
         if (useGradient) {
             applyGradient(particle);
         }

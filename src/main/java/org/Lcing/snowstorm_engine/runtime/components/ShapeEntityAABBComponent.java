@@ -8,8 +8,8 @@ import org.Lcing.snowstorm_engine.molang.MolangParser;
 import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 /**
- * Implements minecraft:emitter_shape_entity_aabb
- * Spawns particles within an entity's bounding box.
+ * 实现 minecraft:emitter_shape_entity_aabb
+ * 在实体的包围盒内生成粒子。
  */
 public class ShapeEntityAABBComponent implements IParticleComponent {
 
@@ -21,10 +21,10 @@ public class ShapeEntityAABBComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value
+        // json 已经是组件值了
         JsonObject comp = json.getAsJsonObject();
 
-        // Parse direction
+        // 解析 direction
         if (comp.has("direction")) {
             JsonElement dirElem = comp.get("direction");
             if (dirElem.isJsonPrimitive()) {
@@ -44,8 +44,8 @@ public class ShapeEntityAABBComponent implements IParticleComponent {
         var ctx = particle.getContext();
         var rand = ctx.getRandom();
 
-        // Use entity bounding box from Molang variables (set by emitter)
-        // Default to a 1x2x1 player-like box if not set
+        // 使用 Molang 变量中的实体包围盒（由发射器设置）
+        // 如果未设置，默认为 1x2x1 的类似玩家的盒子
         float minX = ctx.resolve("variable.entity_aabb_min_x");
         float minY = ctx.resolve("variable.entity_aabb_min_y");
         float minZ = ctx.resolve("variable.entity_aabb_min_z");
@@ -53,7 +53,7 @@ public class ShapeEntityAABBComponent implements IParticleComponent {
         float maxY = ctx.resolve("variable.entity_aabb_max_y");
         float maxZ = ctx.resolve("variable.entity_aabb_max_z");
 
-        // If no entity bounds set, use defaults
+        // 如果没有设置实体边界，使用默认值
         if (minX == 0 && maxX == 0) {
             minX = -0.3f;
             maxX = 0.3f;
@@ -67,7 +67,7 @@ public class ShapeEntityAABBComponent implements IParticleComponent {
             maxZ = 0.3f;
         }
 
-        // Random position within AABB
+        // AABB 内的随机位置
         float px = minX + rand.nextFloat() * (maxX - minX);
         float py = minY + rand.nextFloat() * (maxY - minY);
         float pz = minZ + rand.nextFloat() * (maxZ - minZ);
@@ -76,10 +76,10 @@ public class ShapeEntityAABBComponent implements IParticleComponent {
         particle.y += py;
         particle.z += pz;
 
-        // Direction based on mode
+        // 基于模式的方向
         switch (directionMode) {
             case "outwards":
-                // Direction from center of AABB outward
+                // 从 AABB 中心向外的方向
                 float cx = (minX + maxX) / 2;
                 float cy = (minY + maxY) / 2;
                 float cz = (minZ + maxZ) / 2;

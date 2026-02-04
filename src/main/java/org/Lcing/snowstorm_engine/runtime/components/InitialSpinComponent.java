@@ -7,8 +7,8 @@ import org.Lcing.snowstorm_engine.molang.MolangParser;
 import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 /**
- * Implements minecraft:particle_initial_spin
- * Sets initial rotation and rotation rate for particles.
+ * 实现 minecraft:particle_initial_spin
+ * 设置粒子的初始旋转和旋转速率。
  */
 public class InitialSpinComponent implements IParticleComponent {
 
@@ -20,7 +20,7 @@ public class InitialSpinComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value, not wrapped
+        // json 已经是组件值了，没有包装
         JsonObject comp = json.getAsJsonObject();
 
         if (comp.has("rotation")) {
@@ -42,10 +42,10 @@ public class InitialSpinComponent implements IParticleComponent {
     public void onInitializeParticle(SnowstormParticle particle) {
         var ctx = particle.getContext();
 
-        // Set initial rotation (degrees)
+        // 设置初始旋转（度）
         particle.rotation = rotation.eval(ctx);
 
-        // Set rotation rate (degrees/second)
+        // 设置旋转速率（度/秒）
         particle.rotationRate = rotationRate.eval(ctx);
     }
 }

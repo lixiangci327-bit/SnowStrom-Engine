@@ -17,15 +17,15 @@ public class InitialSpeedComponent implements IParticleComponent {
     public void onInitializeParticle(SnowstormParticle particle) {
         float s = speed.eval(particle.getContext());
 
-        // Normalize current velocity (direction) then scale by speed
-        // Assuming current vx,vy,vz is direction set by ShapePoint
+        // 归一化当前速度（方向）然后按速度缩放
+        // 假设当前 vx,vy,vz 是由 ShapePoint 设置的方向
         double len = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy + particle.vz * particle.vz);
         if (len > 0.0001) {
             particle.vx = (particle.vx / len) * s;
             particle.vy = (particle.vy / len) * s;
             particle.vz = (particle.vz / len) * s;
         } else {
-            // If no direction, speed does nothing (or random direction? usually 0)
+            // 如果没有方向，速度不产生影响（或者随机方向？通常为 0）
         }
     }
 }

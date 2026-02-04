@@ -1,5 +1,8 @@
 package org.Lcing.snowstorm_engine.runtime.components;
 
+/**
+ * 粒子面向相机的模式枚举。
+ */
 public enum FacingCameraMode {
     ROTATE_XYZ("rotate_xyz"),
     ROTATE_Y("rotate_y"),
@@ -25,6 +28,6 @@ public enum FacingCameraMode {
                 return mode;
             }
         }
-        return ROTATE_XYZ; // Default
+        return ROTATE_XYZ; // 默认值
     }
 }

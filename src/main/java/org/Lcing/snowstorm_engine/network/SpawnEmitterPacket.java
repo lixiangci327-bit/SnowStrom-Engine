@@ -3,35 +3,33 @@ package org.Lcing.snowstorm_engine.network;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 import org.Lcing.snowstorm_engine.definition.ParticleDefinition;
-import org.Lcing.snowstorm_engine.loader.ParticleLoader;
 import org.Lcing.snowstorm_engine.runtime.SnowstormEmitter;
 import org.Lcing.snowstorm_engine.runtime.SnowstormManager;
 
-import java.io.InputStream;
 import java.util.function.Supplier;
 
 public class SpawnEmitterPacket {
-    private final String filename;
+    private final String identifier;
     private final double x;
     private final double y;
     private final double z;
 
-    public SpawnEmitterPacket(String filename, double x, double y, double z) {
-        this.filename = filename;
+    public SpawnEmitterPacket(String identifier, double x, double y, double z) {
+        this.identifier = identifier;
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
     public SpawnEmitterPacket(FriendlyByteBuf buf) {
-        this.filename = buf.readUtf();
+        this.identifier = buf.readUtf();
         this.x = buf.readDouble();
         this.y = buf.readDouble();
         this.z = buf.readDouble();
     }
 
     public void encode(FriendlyByteBuf buf) {
-        buf.writeUtf(filename);
+        buf.writeUtf(identifier);
         buf.writeDouble(x);
         buf.writeDouble(y);
         buf.writeDouble(z);
@@ -39,25 +37,23 @@ public class SpawnEmitterPacket {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            // Client Side Execution
+            // 客户端执行
             try {
-                // Load Definition from resources (Client side resource access)
-                String path = "/snowstorm_engine/particles/" + filename;
-                InputStream is = getClass().getResourceAsStream(path);
-                if (is == null) {
-                    System.err.println("[Snowstorm] Could not find particle file on client: " + filename);
+                // 从注册表中查找粒子
+                ParticleDefinition def = SnowstormManager.getInstance().getParticleDefinition(identifier);
+
+                if (def == null) {
+                    System.err.println("[Snowstorm] Could not find particle definition for identifier: " + identifier);
                     return;
                 }
 
-                ParticleDefinition def = ParticleLoader.load(is);
-
-                // Create Emitter
+                // 创建发射器
                 SnowstormEmitter emitter = new SnowstormEmitter(def);
                 emitter.x = x;
                 emitter.y = y;
                 emitter.z = z;
 
-                // Register to Manager
+                // 注册到管理器
                 SnowstormManager.getInstance().addEmitter(emitter);
 
             } catch (Exception e) {

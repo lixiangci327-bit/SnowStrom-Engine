@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * Execution context for Molang.
- * Stores variables, random seed, and providing environment queries.
+ * Molang 执行上下文。
+ * 存储变量、随机种子，并提供环境查询。
  */
 public class MolangContext {
     private final Map<String, Float> variables = new HashMap<>();
@@ -21,11 +21,10 @@ public class MolangContext {
     }
 
     /**
-     * Resolves a value. Handles both standard variables and special queries if
-     * needed.
+     * 解析一个值。如果需要，处理标准变量和特殊查询。
      */
     public float resolve(String name) {
-        // Special handling for queries could go here
+        // 特殊查询处理可以在这里进行
         if (name.equals("math.random")) {
             return random.nextFloat();
         }

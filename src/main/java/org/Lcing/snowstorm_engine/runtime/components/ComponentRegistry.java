@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * 粒子组件注册表。
+ * 用于注册和创建各种粒子组件。
+ */
 public class ComponentRegistry {
     private static final Map<String, Supplier<IParticleComponent>> FACTORIES = new HashMap<>();
 

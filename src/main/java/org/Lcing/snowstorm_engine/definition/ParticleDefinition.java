@@ -24,6 +24,13 @@ public class ParticleDefinition {
         return formatVersion;
     }
 
+    public String getIdentifier() {
+        if (section != null && section.getDescription() != null) {
+            return section.getDescription().getIdentifier();
+        }
+        return null; // or throw exception?
+    }
+
     // 内部类：对应 "particle_effect" 对象
     public static class ParticleEffect {
 

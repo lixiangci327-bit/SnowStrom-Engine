@@ -8,16 +8,16 @@ import org.Lcing.snowstorm_engine.molang.MolangParser;
 import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 /**
- * Implements minecraft:particle_motion_parametric
- * Position and rotation driven directly by Molang (overrides physics).
+ * 实现 minecraft:particle_motion_parametric
+ * 位置和旋转直接由 Molang 驱动（覆盖物理）。
  */
 public class MotionParametricComponent implements IParticleComponent {
 
-    // Relative offset from spawn point
+    // 相对生成点的偏移
     private IMolangExpression relativeX, relativeY, relativeZ;
-    // Direction facing
+    // 朝向
     private IMolangExpression directionX, directionY, directionZ;
-    // Rotation around direction
+    // 绕方向旋转
     private IMolangExpression rotation;
 
     @Override
@@ -25,10 +25,10 @@ public class MotionParametricComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value
+        // json 已经是组件值了
         JsonObject comp = json.getAsJsonObject();
 
-        // Parse relative_position [x, y, z]
+        // 解析 relative_position [x, y, z]
         if (comp.has("relative_position") && comp.get("relative_position").isJsonArray()) {
             JsonArray arr = comp.getAsJsonArray("relative_position");
             relativeX = MolangParser.parseJson(arr.get(0));
@@ -36,7 +36,7 @@ public class MotionParametricComponent implements IParticleComponent {
             relativeZ = MolangParser.parseJson(arr.get(2));
         }
 
-        // Parse direction [x, y, z]
+        // 解析 direction [x, y, z]
         if (comp.has("direction") && comp.get("direction").isJsonArray()) {
             JsonArray arr = comp.getAsJsonArray("direction");
             directionX = MolangParser.parseJson(arr.get(0));
@@ -44,7 +44,7 @@ public class MotionParametricComponent implements IParticleComponent {
             directionZ = MolangParser.parseJson(arr.get(2));
         }
 
-        // Parse rotation
+        // 解析 rotation
         rotation = MolangParser.parseJson(comp.get("rotation"));
     }
 
@@ -52,9 +52,9 @@ public class MotionParametricComponent implements IParticleComponent {
     public void updateParticle(SnowstormParticle particle, float dt) {
         var ctx = particle.getContext();
 
-        // Update position (relative offset from spawn)
+        // 更新位置 (相对于生成点的偏移)
         if (relativeX != null && relativeY != null && relativeZ != null) {
-            // Get spawn position (stored as origin)
+            // 获取生成位置 (存储为原点)
             double spawnX = ctx.resolve("variable.spawn_x");
             double spawnY = ctx.resolve("variable.spawn_y");
             double spawnZ = ctx.resolve("variable.spawn_z");
@@ -64,14 +64,14 @@ public class MotionParametricComponent implements IParticleComponent {
             particle.z = spawnZ + relativeZ.eval(ctx);
         }
 
-        // Update velocity/direction (for rendering purposes)
+        // 更新速度/方向 (用于渲染目的)
         if (directionX != null && directionY != null && directionZ != null) {
             particle.vx = directionX.eval(ctx);
             particle.vy = directionY.eval(ctx);
             particle.vz = directionZ.eval(ctx);
         }
 
-        // Update rotation
+        // 更新旋转
         if (rotation != null) {
             particle.rotation = rotation.eval(ctx);
         }
@@ -79,7 +79,7 @@ public class MotionParametricComponent implements IParticleComponent {
 
     @Override
     public void onInitializeParticle(SnowstormParticle particle) {
-        // Store spawn position for relative calculations
+        // 存储生成位置用于相对计算
         var ctx = particle.getContext();
         ctx.setVariable("variable.spawn_x", (float) particle.x);
         ctx.setVariable("variable.spawn_y", (float) particle.y);

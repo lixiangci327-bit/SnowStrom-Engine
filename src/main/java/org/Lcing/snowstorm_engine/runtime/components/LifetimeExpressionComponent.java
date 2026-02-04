@@ -7,8 +7,8 @@ import org.Lcing.snowstorm_engine.molang.MolangParser;
 import org.Lcing.snowstorm_engine.runtime.SnowstormEmitter;
 
 /**
- * Implements minecraft:emitter_lifetime_expression
- * Emitter activation/expiration controlled by Molang expressions.
+ * 实现 minecraft:emitter_lifetime_expression
+ * 发射器的激活/过期由 Molang 表达式控制。
  */
 public class LifetimeExpressionComponent implements IParticleComponent {
 
@@ -20,17 +20,17 @@ public class LifetimeExpressionComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value
+        // json 已经是组件值了
         JsonObject comp = json.getAsJsonObject();
 
         activationExpression = MolangParser.parseJson(comp.get("activation_expression"));
         if (activationExpression == null) {
-            activationExpression = IMolangExpression.constant(1); // always active
+            activationExpression = IMolangExpression.constant(1); // 始终激活
         }
 
         expirationExpression = MolangParser.parseJson(comp.get("expiration_expression"));
         if (expirationExpression == null) {
-            expirationExpression = IMolangExpression.ZERO; // never expires based on expression
+            expirationExpression = IMolangExpression.ZERO; // 基于表达式永不过期
         }
     }
 
@@ -38,11 +38,11 @@ public class LifetimeExpressionComponent implements IParticleComponent {
     public void update(SnowstormEmitter emitter, float dt) {
         var ctx = emitter.getContext();
 
-        // Check activation
+        // 检查激活状态
         float activation = activationExpression.eval(ctx);
         emitter.isSpawning = activation != 0;
 
-        // Check expiration (non-zero = expire)
+        // 检查过期状态 (非零 = 过期)
         float expiration = expirationExpression.eval(ctx);
         if (expiration != 0) {
             emitter.markForRemoval();

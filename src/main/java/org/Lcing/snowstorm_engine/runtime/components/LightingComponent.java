@@ -5,17 +5,16 @@ import com.google.gson.JsonObject;
 import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 /**
- * Implements minecraft:particle_appearance_lighting
- * Enables block light/sky light influence on particle color.
+ * 实现 minecraft:particle_appearance_lighting
+ * 启用方块光/天光对粒子颜色的影响。
  */
 public class LightingComponent implements IParticleComponent {
 
-    // Currently just a flag - actual implementation would use light level from
-    // world
+    // 目前只是一个标志 - 实际实现将使用来自世界的光照等级
 
     @Override
     public void fromJson(JsonElement json) {
-        // This component has no fields - its presence enables lighting
+        // 该组件没有字段 - 它的存在即启用光照
     }
 
     @Override

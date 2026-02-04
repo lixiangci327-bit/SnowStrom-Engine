@@ -7,9 +7,8 @@ import org.Lcing.snowstorm_engine.molang.MolangParser;
 import org.Lcing.snowstorm_engine.runtime.SnowstormEmitter;
 
 /**
- * Implements minecraft:emitter_rate_manual
- * Particles are only spawned via manual trigger (max_particles acts as
- * capacity).
+ * 实现 minecraft:emitter_rate_manual
+ * 粒子仅通过手动触发生成（max_particles 充当容量）。
  */
 public class RateManualComponent implements IParticleComponent {
 
@@ -20,7 +19,7 @@ public class RateManualComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value
+        // json 已经是组件值了
         JsonObject comp = json.getAsJsonObject();
 
         if (comp.has("max_particles")) {
@@ -33,9 +32,9 @@ public class RateManualComponent implements IParticleComponent {
 
     @Override
     public void update(SnowstormEmitter emitter, float dt) {
-        // Manual mode doesn't auto-spawn; just ensure max capacity is respected
+        // 手动模式不自动生成；只需确保遵守最大容量
         int max = (int) maxParticles.eval(emitter.getContext());
         emitter.setMaxParticles(max);
-        // Spawning is controlled externally via emitter.spawnParticle()
+        // 生成通过 emitter.spawnParticle() 外部控制
     }
 }

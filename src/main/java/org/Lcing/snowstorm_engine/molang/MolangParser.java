@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple Recursive Descent Parser for Molang.
- * Parses strings like "variable.age * 0.5 + 1" into an IMolangExpression tree.
+ * 一个简单的 Molang 递归下降解析器。
+ * 将诸如 "variable.age * 0.5 + 1" 之类的字符串解析为 IMolangExpression 树。
  */
 public class MolangParser {
 
@@ -13,8 +13,8 @@ public class MolangParser {
         if (expression == null || expression.trim().isEmpty()) {
             return IMolangExpression.ZERO;
         }
-        // Very basic tokenizer: split by known delimiters but keep them?
-        // For simplicity, we'll process char by char in a dedicated cursor class.
+        // 非常基础的分词器：按已知定界符分割但保留它们？
+        // 为了简单起见，我们将在专用的游标类中逐字符处理。
         return new State(expression).parseExpression();
     }
 
@@ -63,7 +63,7 @@ public class MolangParser {
             }
         }
 
-        // Expression -> Term { (+|-) Term }
+        // 表达式 -> 项 { (+|-) 项 }
         public IMolangExpression parseExpression() {
             IMolangExpression left = parseTerm();
 
@@ -85,7 +85,7 @@ public class MolangParser {
             return left;
         }
 
-        // Term -> Factor { (*|/) Factor }
+        // 项 -> 因子 { (*|/) 因子 }
         private IMolangExpression parseTerm() {
             IMolangExpression left = parseFactor();
 
@@ -107,47 +107,46 @@ public class MolangParser {
             return left;
         }
 
-        // Factor -> Number | Variable | Function | ( Expression ) | -Factor (unary
-        // minus)
+        // 因子 -> 数字 | 变量 | 函数 | ( 表达式 ) | -因子 (一元减号)
         private IMolangExpression parseFactor() {
             skipWhitespace();
             int c = peek();
 
-            // Parentheses
+            // 括号
             if (consume('(')) {
                 IMolangExpression expr = parseExpression();
                 consume(')');
                 return expr;
             }
 
-            // Unary minus: check if '-' is followed by a letter (function/variable)
-            // or another '(' (expression)
+            // 一元减号：检查 '-' 后面是否跟着字母（函数/变量）
+            // 或另一个 '(' （表达式）
             if (c == '-') {
                 int nextPos = pos + 1;
                 if (nextPos < src.length()) {
                     char nextChar = src.charAt(nextPos);
-                    // If next char is letter or '(', treat as unary minus
+                    // 如果下一个字符是字母或 '('，则视为一元减号
                     if (Character.isLetter(nextChar) || nextChar == '(') {
-                        next(); // consume the '-'
+                        next(); // 消耗 '-'
                         IMolangExpression inner = parseFactor();
                         return new MolangExpressions.UnaryMinus(inner);
                     }
                 }
-                // Otherwise fall through to parseNumber for negative numbers like -5.0
+                // 否则继续执行以解析像 -5.0 这样的负数
             }
 
-            // Number
+            // 数字
             if (Character.isDigit(c) || c == '.' || c == '-') {
                 return parseNumber();
             }
 
-            // Identifier (Variable or Function)
+            // 标识符 (变量或函数)
             if (Character.isLetter(c) || c == '_') {
                 return parseIdentifier();
             }
 
-            // Default fallback
-            next(); // consume invalid char
+            // 默认回退
+            next(); // 消耗无效字符
             return IMolangExpression.ZERO;
         }
 
@@ -163,7 +162,7 @@ public class MolangParser {
             }
             String name = sb.toString();
 
-            // Expand Bedrock variable shorthands
+            // 扩展基岩版变量简写
             if (name.startsWith("v.")) {
                 name = "variable." + name.substring(2);
             } else if (name.startsWith("q.")) {
@@ -175,7 +174,7 @@ public class MolangParser {
             }
 
             skipWhitespace();
-            // Function call?
+            // 函数调用?
             if (peek() == '(') {
                 return parseFunctionCall(name);
             }
@@ -194,7 +193,7 @@ public class MolangParser {
             }
             consume(')');
 
-            // Case-insensitive matching (Bedrock allows Math.random and math.random)
+            // 不区分大小写匹配 (基岩版允许 Math.random 和 math.random)
             String fn = funcName.toLowerCase();
 
             if (fn.equals("math.random") && args.size() >= 2) {
@@ -246,13 +245,13 @@ public class MolangParser {
                 return new MolangExpressions.MathHermiteBlend(args.get(0));
             }
 
-            // Unknown function fallback
+            // 未知函数回退
             return IMolangExpression.ZERO;
         }
 
         private IMolangExpression parseNumber() {
             StringBuilder sb = new StringBuilder();
-            if (peek() == '-') { // handle negative numbers if at start of number
+            if (peek() == '-') { // 如果在数字开头处理负数
                 sb.append((char) next());
             }
 

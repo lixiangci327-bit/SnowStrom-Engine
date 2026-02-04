@@ -7,8 +7,8 @@ import org.Lcing.snowstorm_engine.molang.MolangParser;
 import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 /**
- * Implements minecraft:emitter_shape_box
- * Particles spawn within a box volume or on its surface.
+ * 实现 minecraft:emitter_shape_box
+ * 粒子在盒体体积内或其表面生成。
  */
 public class ShapeBoxComponent implements IParticleComponent {
 
@@ -23,10 +23,10 @@ public class ShapeBoxComponent implements IParticleComponent {
         if (!json.isJsonObject())
             return;
 
-        // json is already the component value
+        // json 已经是组件值了
         JsonObject comp = json.getAsJsonObject();
 
-        // Parse offset [x, y, z]
+        // 解析 offset [x, y, z]
         if (comp.has("offset") && comp.get("offset").isJsonArray()) {
             var arr = comp.getAsJsonArray("offset");
             offsetX = MolangParser.parseJson(arr.get(0));
@@ -36,7 +36,7 @@ public class ShapeBoxComponent implements IParticleComponent {
             offsetX = offsetY = offsetZ = IMolangExpression.ZERO;
         }
 
-        // Parse half_dimensions [x, y, z]
+        // 解析 half_dimensions [x, y, z]
         if (comp.has("half_dimensions") && comp.get("half_dimensions").isJsonArray()) {
             var arr = comp.getAsJsonArray("half_dimensions");
             halfX = MolangParser.parseJson(arr.get(0));
@@ -46,12 +46,12 @@ public class ShapeBoxComponent implements IParticleComponent {
             halfX = halfY = halfZ = IMolangExpression.constant(0.5f);
         }
 
-        // Parse surface_only
+        // 解析 surface_only
         if (comp.has("surface_only")) {
             surfaceOnly = comp.get("surface_only").getAsBoolean();
         }
 
-        // Parse direction
+        // 解析 direction
         if (comp.has("direction")) {
             JsonElement dirElem = comp.get("direction");
             if (dirElem.isJsonPrimitive()) {
@@ -76,10 +76,10 @@ public class ShapeBoxComponent implements IParticleComponent {
         float hz = halfZ.eval(ctx);
 
         float px, py, pz;
-        float nx = 0, ny = 0, nz = 0; // Normal/direction
+        float nx = 0, ny = 0, nz = 0; // 法线/方向
 
         if (surfaceOnly) {
-            // Pick a random face and random point on that face
+            // 选取一个随机面和该面上的随机点
             int face = rand.nextInt(6);
             switch (face) {
                 case 0: // +X
@@ -120,11 +120,11 @@ public class ShapeBoxComponent implements IParticleComponent {
                     break;
             }
         } else {
-            // Random point inside box
+            // 盒体内的随机点
             px = rand.nextFloat() * 2 * hx - hx;
             py = rand.nextFloat() * 2 * hy - hy;
             pz = rand.nextFloat() * 2 * hz - hz;
-            // Direction: normalize position from center
+            // 方向：从中心归一化位置
             float len = (float) Math.sqrt(px * px + py * py + pz * pz);
             if (len > 0.001f) {
                 nx = px / len;
@@ -133,7 +133,7 @@ public class ShapeBoxComponent implements IParticleComponent {
             }
         }
 
-        // Apply offset
+        // 应用偏移
         float ox = offsetX.eval(ctx);
         float oy = offsetY.eval(ctx);
         float oz = offsetZ.eval(ctx);
@@ -142,7 +142,7 @@ public class ShapeBoxComponent implements IParticleComponent {
         particle.y += oy + py;
         particle.z += oz + pz;
 
-        // Set direction based on mode
+        // 基于模式设置方向
         switch (directionMode) {
             case "outwards":
                 particle.vx = nx;

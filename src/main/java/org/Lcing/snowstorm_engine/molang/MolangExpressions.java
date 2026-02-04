@@ -88,7 +88,7 @@ public class MolangExpressions {
 
         @Override
         public float eval(MolangContext context) {
-            // Molang uses degrees for trig!
+            // Molang 使用度数进行三角函数计算！
             float deg = arg.eval(context);
             return (float) Math.sin(Math.toRadians(deg));
         }

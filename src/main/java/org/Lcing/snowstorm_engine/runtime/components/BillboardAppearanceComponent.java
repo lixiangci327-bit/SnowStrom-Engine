@@ -9,18 +9,18 @@ import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 public class BillboardAppearanceComponent implements IParticleComponent {
 
-    // Size expressions (can be Molang)
+    // 尺寸表达式（可以是 Molang）
     private IMolangExpression sizeX = IMolangExpression.constant(0.25f);
     private IMolangExpression sizeY = IMolangExpression.constant(0.25f);
 
-    // UV Logic
+    // UV 逻辑
     private int textureWidth = 16;
     private int textureHeight = 16;
 
     // Facing
-    private String facingMode = "lookat_xyz"; // default
+    private String facingMode = "lookat_xyz"; // 默认值
 
-    // Flipbook
+    // 翻书动画
     private boolean isFlipbook = false;
     private float[] baseUV = new float[] { 0, 0 };
     private float[] sizeUV = new float[] { 16, 16 };
@@ -29,7 +29,7 @@ public class BillboardAppearanceComponent implements IParticleComponent {
     private float maxFrame = 0;
     private boolean loop = false;
 
-    // Static UV (for non-flipbook)
+    // 静态 UV（用于非翻书动画）
     private float staticU0 = 0, staticV0 = 0, staticU1 = 1, staticV1 = 1;
 
     @Override
@@ -38,7 +38,7 @@ public class BillboardAppearanceComponent implements IParticleComponent {
             return;
         JsonObject obj = json.getAsJsonObject();
 
-        // Size - can be Molang expressions
+        // 尺寸 - 可以是 Molang 表达式
         if (obj.has("size")) {
             JsonArray arr = obj.getAsJsonArray("size");
             if (arr.size() >= 2) {
@@ -59,7 +59,7 @@ public class BillboardAppearanceComponent implements IParticleComponent {
             if (uvConfig.has("texture_height"))
                 textureHeight = uvConfig.get("texture_height").getAsInt();
 
-            // Static UV (non-flipbook)
+            // 静态 UV（非翻书动画）
             if (uvConfig.has("uv") && uvConfig.has("uv_size")) {
                 JsonArray uvArr = uvConfig.getAsJsonArray("uv");
                 JsonArray sizeArr = uvConfig.getAsJsonArray("uv_size");
@@ -101,15 +101,16 @@ public class BillboardAppearanceComponent implements IParticleComponent {
 
     @Override
     public void onInitializeParticle(SnowstormParticle particle) {
-        // Evaluate size expressions
+        // 评估尺寸表达式
         var ctx = particle.getContext();
         particle.sizeX = sizeX.eval(ctx);
         particle.sizeY = sizeY.eval(ctx);
         particle.renderMode = FacingCameraMode.fromString(facingMode);
 
-        System.out.println("[Snowstorm] Particle size: " + particle.sizeX + " x " + particle.sizeY);
+        // System.out.println("[Snowstorm] Particle size: " + particle.sizeX + " x " +
+        // particle.sizeY);
 
-        // Set initial UV
+        // 设置初始 UV
         if (!isFlipbook) {
             particle.u0 = staticU0;
             particle.v0 = staticV0;
@@ -122,7 +123,7 @@ public class BillboardAppearanceComponent implements IParticleComponent {
 
     @Override
     public void updateParticle(SnowstormParticle particle, float dt) {
-        // Update size dynamically (for animated sizes)
+        // 动态更新尺寸（用于动画尺寸）
         var ctx = particle.getContext();
         particle.sizeX = sizeX.eval(ctx);
         particle.sizeY = sizeY.eval(ctx);
@@ -149,7 +150,7 @@ public class BillboardAppearanceComponent implements IParticleComponent {
         float uStart = baseUV[0] + stepUV[0] * frameIndex;
         float vStart = baseUV[1] + stepUV[1] * frameIndex;
 
-        // Convert pixels to 0-1 UV
+        // 将像素转换为 0-1 UV
         p.u0 = uStart / (float) textureWidth;
         p.v0 = vStart / (float) textureHeight;
         p.u1 = (uStart + sizeUV[0]) / (float) textureWidth;

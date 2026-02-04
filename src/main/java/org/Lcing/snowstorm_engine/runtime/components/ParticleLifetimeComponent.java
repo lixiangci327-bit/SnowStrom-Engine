@@ -8,7 +8,7 @@ import org.Lcing.snowstorm_engine.runtime.SnowstormParticle;
 
 public class ParticleLifetimeComponent implements IParticleComponent {
     private IMolangExpression maxLifetime = IMolangExpression.constant(1.0f);
-    // expiration_expressions not implemented for MVP
+    // expiration_expressions 对于 MVP 尚未实现
 
     @Override
     public void fromJson(JsonElement json) {
@@ -24,9 +24,10 @@ public class ParticleLifetimeComponent implements IParticleComponent {
     public void onInitializeParticle(SnowstormParticle particle) {
         float lifetime = maxLifetime.eval(particle.getContext());
         particle.lifetime = lifetime;
-        // Debug: Log lifetime setting
+        // 调试: 记录寿命设置
         if (Math.random() < 0.02) {
-            System.out.println("[Snowstorm] Lifetime set: " + String.format("%.3f", lifetime));
+            // System.out.println("[Snowstorm] Lifetime set: " + String.format("%.3f",
+            // lifetime));
         }
     }
 }

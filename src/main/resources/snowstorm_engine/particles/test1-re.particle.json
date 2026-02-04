@@ -2,10 +2,10 @@
 	"format_version": "1.10.0",
 	"particle_effect": {
 		"description": {
-			"identifier": "",
+			"identifier": "test1re",
 			"basic_render_parameters": {
 				"material": "particles_blend",
-				"texture": "snowstorm_engine:textures/ke1"
+				"texture": "snowstorm_engine:textures/particle/ke1.png"
 			}
 		},
 		"curves": {
@@ -13,30 +13,13 @@
 				"type": "linear",
 				"input": "v.particle_age",
 				"horizontal_range": "v.particle_lifetime",
-				"nodes": [
-					0.64,
-					1.04,
-					1.21,
-					1.17,
-					0.84,
-					0.47,
-					0.32,
-					0.23
-				]
+				"nodes": [0.64, 1.04, 1.21, 1.17, 0.84, 0.47, 0.32, 0.23]
 			},
 			"variable.size": {
 				"type": "linear",
 				"input": "v.particle_age",
 				"horizontal_range": "v.particle_lifetime",
-				"nodes": [
-					1.92,
-					1.46,
-					0.81,
-					0.45,
-					0.31,
-					0.21,
-					0.1
-				]
+				"nodes": [1.92, 1.46, 0.81, 0.45, 0.31, 0.21, 0.1]
 			}
 		},
 		"components": {
@@ -59,22 +42,13 @@
 				"linear_drag_coefficient": 5
 			},
 			"minecraft:particle_appearance_billboard": {
-				"size": [
-					"0.35 * variable.size * (v.particle_random_1 * 0.5 + 0.5)",
-					"0.75 * variable.size2 * (v.particle_random_1 * 0.5 + 0.5)"
-				],
+				"size": ["0.5 * variable.size * (v.particle_random_1 * 0.5 + 0.5)", "0.75 * variable.size2 * (v.particle_random_1 * 0.5 + 0.5)"],
 				"facing_camera_mode": "lookat_direction",
 				"uv": {
 					"texture_width": 200,
 					"texture_height": 200,
-					"uv": [
-						0,
-						0
-					],
-					"uv_size": [
-						200,
-						200
-					]
+					"uv": [0, 0],
+					"uv_size": [200, 200]
 				}
 			},
 			"minecraft:particle_appearance_tinting": {

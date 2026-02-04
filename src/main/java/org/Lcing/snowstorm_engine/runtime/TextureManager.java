@@ -7,15 +7,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Manages texture loading for Snowstorm particles.
- * Caches textures and handles resource pack paths.
+ * 管理 Snowstorm 粒子的纹理加载。
+ * 缓存纹理并处理资源包路径。
  */
 public class TextureManager {
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
 
     /**
-     * Gets or creates a ResourceLocation for the given texture path.
-     * Supports Bedrock-style paths (e.g., "textures/particle/particles")
+     * 获取或创建给定纹理路径的 ResourceLocation。
+     * 支持基岩版风格路径 (例如 "textures/particle/particles")
      */
     @Nullable
     public static ResourceLocation getTexture(String path) {
@@ -27,26 +27,26 @@ public class TextureManager {
     }
 
     private static ResourceLocation parseTexturePath(String path) {
-        // Handle different path formats
-        // Bedrock: "textures/particle/particles"
-        // Full: "namespace:textures/particle/particles.png"
+        // 处理不同的路径格式
+        // 基岩版: "textures/particle/particles"
+        // 完整: "namespace:textures/particle/particles.png"
 
         String namespace = "minecraft";
         String texturePath = path;
 
-        // Check for namespace separator
+        // 检查命名空间分隔符
         if (path.contains(":")) {
             String[] parts = path.split(":", 2);
             namespace = parts[0];
             texturePath = parts[1];
         }
 
-        // Ensure path starts with textures/
+        // 确保路径以 textures/ 开头
         if (!texturePath.startsWith("textures/")) {
             texturePath = "textures/" + texturePath;
         }
 
-        // Ensure .png extension
+        // 确保 .png 扩展名
         if (!texturePath.endsWith(".png")) {
             texturePath = texturePath + ".png";
         }
@@ -55,7 +55,7 @@ public class TextureManager {
     }
 
     /**
-     * Binds the specified texture for rendering.
+     * 绑定指定的纹理用于渲染。
      */
     public static void bindTexture(ResourceLocation texture) {
         if (texture != null) {
@@ -64,7 +64,7 @@ public class TextureManager {
     }
 
     /**
-     * Clears the texture cache.
+     * 清除纹理缓存。
      */
     public static void clearCache() {
         TEXTURE_CACHE.clear();
